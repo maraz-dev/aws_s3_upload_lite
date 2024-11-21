@@ -89,8 +89,12 @@ class AwsS3 {
 
       final uri = Uri.parse(endpoint);
       final req = MultipartRequest("POST", uri, onProgress: onUploadProgress);
-      final multipartFile =
-          http.MultipartFile('file', stream, length, filename: path.basename(file.path));
+      final multipartFile = http.MultipartFile(
+        'file',
+        stream,
+        length,
+        filename: path.basename(file.path),
+      );
 
       // Convert metadata to AWS-compliant params before generating the policy.
       final metadataParams = _convertMetadataToParams(metadata);
