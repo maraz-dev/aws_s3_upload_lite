@@ -7,7 +7,7 @@ import 'utils.dart';
 class Policy {
   String expiration;
   String region;
-  ACL acl;
+  //ACL acl;
   String bucket;
   String key;
   String credential;
@@ -22,7 +22,8 @@ class Policy {
     this.expiration,
     this.credential,
     this.maxFileSize,
-    this.acl, {
+    //this.acl,
+    {
     this.region = 'us-east-2',
     this.metadata,
   });
@@ -33,7 +34,8 @@ class Policy {
     String accessKeyId,
     int expiryMinutes,
     int maxFileSize,
-    ACL acl, {
+    //ACL acl,
+    {
     String region = 'us-east-2',
     Map<String, dynamic>? metadata,
   }) {
@@ -44,8 +46,7 @@ class Policy {
         .toString()
         .split(' ')
         .join('T');
-    final cred =
-        '$accessKeyId/${SigV4.buildCredentialScope(datetime, region, 's3')}';
+    final cred = '$accessKeyId/${SigV4.buildCredentialScope(datetime, region, 's3')}';
 
     return Policy(
       key,
@@ -54,7 +55,7 @@ class Policy {
       expiration,
       cred,
       maxFileSize,
-      acl,
+      //acl,
       region: region,
       metadata: metadata,
     );
@@ -65,8 +66,7 @@ class Policy {
     return base64.encode(bytes);
   }
 
-  List<Map<String, String>> _convertMetadataToPolicyParams(
-      Map<String, dynamic>? metadata) {
+  List<Map<String, String>> _convertMetadataToPolicyParams(Map<String, dynamic>? metadata) {
     final List<Map<String, String>> params = [];
 
     if (metadata != null) {
@@ -88,7 +88,7 @@ class Policy {
         {"bucket": "${this.bucket}"},
         ["starts-with", "\$key", "${this.key}"],
         ["starts-with", "\$Content-Type", ""],
-        {"acl": "${aclToString(acl)}"},
+        //{"acl": "${aclToString(acl)}"},
         ["content-length-range", 1, this.maxFileSize],
         {"x-amz-credential": "${this.credential}"},
         {"x-amz-algorithm": "AWS4-HMAC-SHA256"},

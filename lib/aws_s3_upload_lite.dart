@@ -102,7 +102,7 @@ class AwsS3 {
         accessKey,
         45,
         length,
-        acl,
+        //acl,
         region: region,
         metadata: metadataParams,
       );
@@ -112,7 +112,7 @@ class AwsS3 {
 
       req.files.add(multipartFile);
       req.fields['key'] = policy.key;
-      req.fields['acl'] = aclToString(acl);
+      //req.fields['acl'] = aclToString(acl);
       req.fields['X-Amz-Credential'] = policy.credential;
       req.fields['X-Amz-Algorithm'] = 'AWS4-HMAC-SHA256';
       req.fields['X-Amz-Date'] = policy.datetime;
@@ -136,8 +136,8 @@ class AwsS3 {
 
       try {
         final res = await req.send();
-        log('Status Code:' + res.statusCode.toString());
-        return res.stream.bytesToString();
+        log('Message:' + await res.stream.bytesToString());
+        return res.statusCode.toString();
       } catch (e) {
         return e.toString();
       }
@@ -245,7 +245,7 @@ class AwsS3 {
         accessKey,
         45,
         length,
-        acl,
+        //acl,
         region: region,
         metadata: metadataParams,
       );
@@ -376,7 +376,7 @@ class AwsS3 {
         accessKey,
         45,
         length,
-        acl,
+        //acl,
         region: region,
         metadata: metadataParams,
       );
