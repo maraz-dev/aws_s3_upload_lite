@@ -137,7 +137,7 @@ class AwsS3 {
       try {
         final res = await req.send();
         log('Status Code:' + res.statusCode.toString());
-        return res.stream.toString();
+        return res.stream.bytesToString();
       } catch (e) {
         return e.toString();
       }
