@@ -1,6 +1,7 @@
 library aws_s3_upload_lite;
 
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:amazon_cognito_identity_dart_2/sig_v4.dart';
@@ -88,8 +89,8 @@ class AwsS3 {
 
       final uri = Uri.parse(endpoint);
       final req = MultipartRequest("POST", uri, onProgress: onUploadProgress);
-      final multipartFile = http.MultipartFile('file', stream, length,
-          filename: path.basename(file.path));
+      final multipartFile =
+          http.MultipartFile('file', stream, length, filename: path.basename(file.path));
 
       // Convert metadata to AWS-compliant params before generating the policy.
       final metadataParams = _convertMetadataToParams(metadata);
@@ -106,8 +107,7 @@ class AwsS3 {
         metadata: metadataParams,
       );
 
-      final signingKey =
-          SigV4.calculateSigningKey(secretKey, policy.datetime, region, 's3');
+      final signingKey = SigV4.calculateSigningKey(secretKey, policy.datetime, region, 's3');
       final signature = SigV4.calculateSignature(signingKey, policy.encode());
 
       req.files.add(multipartFile);
@@ -120,7 +120,7 @@ class AwsS3 {
       req.fields['X-Amz-Signature'] = signature;
       req.fields['Content-Type'] = contentType;
 
-      if(sessionToken != null){
+      if (sessionToken != null) {
         req.fields['X-Amz-Security-Token'] = sessionToken;
       }
 
@@ -136,7 +136,7 @@ class AwsS3 {
 
       try {
         final res = await req.send();
-
+        log('Status Code:' + res.statusCode.toString());
         return res.stream.toString();
       } catch (e) {
         return e.toString();
@@ -148,8 +148,7 @@ class AwsS3 {
 
   /// A method to transform the map keys into the format compliant with AWS.
   /// AWS requires that each metadata param be sent as `x-amz-meta-*`.
-  static Map<String, String> _convertMetadataToParams(
-      Map<String, String>? metadata) {
+  static Map<String, String> _convertMetadataToParams(Map<String, String>? metadata) {
     Map<String, String> updatedMetadata = {};
 
     if (metadata != null) {
@@ -234,8 +233,7 @@ class AwsS3 {
 
       final uri = Uri.parse(endpoint);
       final req = MultipartRequest("POST", uri, onProgress: onUploadProgress);
-      final multipartFile =
-          http.MultipartFile('file', stream, length, filename: filename);
+      final multipartFile = http.MultipartFile('file', stream, length, filename: filename);
 
       // Convert metadata to AWS-compliant params before generating the policy.
       final metadataParams = _convertMetadataToParams(metadata);
@@ -252,8 +250,7 @@ class AwsS3 {
         metadata: metadataParams,
       );
 
-      final signingKey =
-          SigV4.calculateSigningKey(secretKey, policy.datetime, region, 's3');
+      final signingKey = SigV4.calculateSigningKey(secretKey, policy.datetime, region, 's3');
       final signature = SigV4.calculateSignature(signingKey, policy.encode());
 
       req.files.add(multipartFile);
@@ -265,7 +262,7 @@ class AwsS3 {
       req.fields['Policy'] = policy.encode();
       req.fields['X-Amz-Signature'] = signature;
       req.fields['Content-Type'] = contentType;
-      if(sessionToken != null){
+      if (sessionToken != null) {
         req.fields['X-Amz-Security-Token'] = sessionToken;
       }
       // If metadata isn't null, add metadata params to the request.
@@ -367,8 +364,7 @@ class AwsS3 {
         uri,
         onProgress: onUploadProgress,
       );
-      final multipartFile =
-          http.MultipartFile('file', stream, length, filename: filename);
+      final multipartFile = http.MultipartFile('file', stream, length, filename: filename);
 
       // Convert metadata to AWS-compliant params before generating the policy.
       final metadataParams = _convertMetadataToParams(metadata);
@@ -385,8 +381,7 @@ class AwsS3 {
         metadata: metadataParams,
       );
 
-      final signingKey =
-          SigV4.calculateSigningKey(secretKey, policy.datetime, region, 's3');
+      final signingKey = SigV4.calculateSigningKey(secretKey, policy.datetime, region, 's3');
       final signature = SigV4.calculateSignature(signingKey, policy.encode());
 
       req.files.add(multipartFile);
@@ -399,7 +394,7 @@ class AwsS3 {
       req.fields['X-Amz-Signature'] = signature;
       req.fields['Content-Type'] = contentType;
 
-      if(sessionToken != null){
+      if (sessionToken != null) {
         req.fields['X-Amz-Security-Token'] = sessionToken;
       }
 
@@ -412,7 +407,7 @@ class AwsS3 {
       if (headers != null) {
         req.headers.addAll(headers);
       }
-      
+
       try {
         final res = await req.send();
 
